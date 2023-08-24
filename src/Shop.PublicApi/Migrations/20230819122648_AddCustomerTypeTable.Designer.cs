@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shop.Infrastructure.Data.Context;
 
@@ -12,9 +13,11 @@ using Shop.Infrastructure.Data.Context;
 namespace Shop.PublicApi.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    partial class WriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230819122648_AddCustomerTypeTable")]
+    partial class AddCustomerTypeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +30,6 @@ namespace Shop.PublicApi.Migrations
             modelBuilder.Entity("Shop.Domain.Entities.CustomerAggregate.Customer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CustomerTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -53,12 +53,7 @@ namespace Shop.PublicApi.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerTypeId");
 
                     b.ToTable("Customers");
                 });
@@ -91,10 +86,6 @@ namespace Shop.PublicApi.Migrations
 
             modelBuilder.Entity("Shop.Domain.Entities.CustomerAggregate.Customer", b =>
                 {
-                    b.HasOne("Shop.Domain.Entities.CustomerTypeAggregate.CustomerType", "CustomerType")
-                        .WithMany()
-                        .HasForeignKey("CustomerTypeId");
-
                     b.OwnsOne("Shop.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("CustomerId")
@@ -120,8 +111,6 @@ namespace Shop.PublicApi.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
                         });
-
-                    b.Navigation("CustomerType");
 
                     b.Navigation("Email");
                 });

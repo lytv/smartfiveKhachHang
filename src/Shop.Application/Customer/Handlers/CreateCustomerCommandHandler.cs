@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Shop.Application.Customer.Commands;
 using Shop.Application.Customer.Responses;
 using Shop.Core.SharedKernel;
 using Shop.Domain.Entities.CustomerAggregate;
+using Shop.Domain.Entities.CustomerTypeAggregate;
 using Shop.Domain.Factories;
 using Shop.Domain.ValueObjects;
 
@@ -17,17 +19,20 @@ namespace Shop.Application.Customer.Handlers;
 public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, Result<CreatedCustomerResponse>>
 {
     private readonly ICustomerWriteOnlyRepository _repository;
+    private readonly ICustomerTypeWriteOnlyRepository _customerTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<CreateCustomerCommand> _validator;
 
     public CreateCustomerCommandHandler(
-        IValidator<CreateCustomerCommand> validator,
         ICustomerWriteOnlyRepository repository,
-        IUnitOfWork unitOfWork)
+        ICustomerTypeWriteOnlyRepository customerTypeRepository,
+        IUnitOfWork unitOfWork,
+        IValidator<CreateCustomerCommand> validator)
     {
-        _validator = validator;
         _repository = repository;
+        _customerTypeRepository = customerTypeRepository;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
     public async Task<Result<CreatedCustomerResponse>> Handle(
@@ -51,6 +56,13 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         if (await _repository.ExistsByEmailAsync(emailResult.Value))
             return Result<CreatedCustomerResponse>.Error("The provided email address is already in use.");
 
+        var customerTypeResult = await _customerTypeRepository.GetByIdAsync(request.CustomerTypeId);
+        if (customerTypeResult == null)
+        {
+            return Result<CreatedCustomerResponse>.NotFound("The provided customer type id is not found.");
+        }
+
+
         // Creating an instance of the customer entity.
         // When instantiated, the "CustomerCreatedEvent" will be created.
         var customer = CustomerFactory.Create(
@@ -58,7 +70,9 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
             request.LastName,
             request.Gender,
             emailResult.Value,
-            request.DateOfBirth);
+            request.DateOfBirth,
+            customerTypeResult,
+            request.TenantId);
 
         // Adding the entity to the repository.
         _repository.Add(customer);

@@ -1,4 +1,5 @@
 using System;
+using Shop.Domain.Entities.CustomerTypeAggregate;
 
 namespace Shop.Domain.Entities.CustomerAggregate.Events;
 
@@ -10,7 +11,9 @@ public class CustomerCreatedEvent : CustomerBaseEvent
         string lastName,
         EGender gender,
         string email,
-        DateTime dateOfBirth) : base(id, firstName, lastName, gender, email, dateOfBirth)
+        DateTime dateOfBirth,
+        int tenantId,
+        CustomerType customerType) : base(id, firstName, lastName, gender, email, dateOfBirth, tenantId, customerType)
     {
     }
 }

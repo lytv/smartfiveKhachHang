@@ -36,6 +36,25 @@ public class CustomerMap : IReadDbMapping
 
             // Ignore
             classMap.UnmapMember(customer => customer.FullName);
+
+        });
+
+        BsonClassMap.TryRegisterClassMap<CustomerTypeQueryModel>(classMap =>
+        {
+            classMap.AutoMap();
+            classMap.SetIgnoreExtraElements(true);
+
+            classMap.MapMember(customer => customer.Id)
+                .SetIsRequired(true);
+
+            classMap.MapMember(customer => customer.CustomerTypeCode)
+                .SetIsRequired(true);
+
+            classMap.MapMember(customer => customer.Description)
+                .SetIsRequired(true);
+
+            classMap.MapMember(customer => customer.TenantId)
+                .SetIsRequired(true);
         });
     }
 }

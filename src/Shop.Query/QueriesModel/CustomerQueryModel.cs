@@ -11,7 +11,9 @@ public class CustomerQueryModel : IQueryModel<Guid>
         string lastName,
         string gender,
         string email,
-        DateTime dateOfBirth)
+        DateTime dateOfBirth,
+        CustomerTypeQueryModel customerType,
+        int tenantId)
     {
         Id = id;
         FirstName = firstName;
@@ -19,6 +21,8 @@ public class CustomerQueryModel : IQueryModel<Guid>
         Gender = gender;
         Email = email;
         DateOfBirth = dateOfBirth;
+        CustomerType = customerType;
+        TenantId = tenantId;
     }
 
     public Guid Id { get; }
@@ -27,6 +31,8 @@ public class CustomerQueryModel : IQueryModel<Guid>
     public string Gender { get; }
     public string Email { get; }
     public DateTime DateOfBirth { get; }
+    public virtual CustomerTypeQueryModel CustomerType { get; }
+    public int TenantId { get; }
 
     public string FullName => (FirstName + " " + LastName).Trim();
 }

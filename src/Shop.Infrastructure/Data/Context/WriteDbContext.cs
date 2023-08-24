@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DataEncryption;
 using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
 using Shop.Domain.Entities.CustomerAggregate;
+using Shop.Domain.Entities.CustomerTypeAggregate;
 using Shop.Infrastructure.Data.Mappings;
 
 namespace Shop.Infrastructure.Data.Context;
@@ -17,13 +18,14 @@ public class WriteDbContext : BaseDbContext<WriteDbContext>
         _encryptionProvider = new AesProvider(EncryptionKey, EncryptionIv);
 
     internal DbSet<Customer> Customers => Set<Customer>();
+    internal DbSet<CustomerType> CustomerTypes => Set<CustomerType>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new CustomerConfiguration());
-
+        modelBuilder.ApplyConfiguration(new CustomerTypeConfiguration());
         // Data Encryption
         // https://github.com/Eastrall/EntityFrameworkCore.DataEncryption
         modelBuilder.UseEncryption(_encryptionProvider);

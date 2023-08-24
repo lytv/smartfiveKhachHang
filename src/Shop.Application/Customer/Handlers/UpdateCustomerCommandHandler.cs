@@ -8,6 +8,7 @@ using MediatR;
 using Shop.Application.Customer.Commands;
 using Shop.Core.SharedKernel;
 using Shop.Domain.Entities.CustomerAggregate;
+using Shop.Domain.Entities.CustomerTypeAggregate;
 using Shop.Domain.ValueObjects;
 
 namespace Shop.Application.Customer.Handlers;
@@ -15,17 +16,20 @@ namespace Shop.Application.Customer.Handlers;
 public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Result>
 {
     private readonly ICustomerWriteOnlyRepository _repository;
+    private readonly ICustomerTypeWriteOnlyRepository _customerTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<UpdateCustomerCommand> _validator;
 
     public UpdateCustomerCommandHandler(
-        IValidator<UpdateCustomerCommand> validator,
         ICustomerWriteOnlyRepository repository,
-        IUnitOfWork unitOfWork)
+        ICustomerTypeWriteOnlyRepository customerTypeRepository,
+        IUnitOfWork unitOfWork,
+        IValidator<UpdateCustomerCommand> validator)
     {
-        _validator = validator;
         _repository = repository;
+        _customerTypeRepository = customerTypeRepository;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
     public async Task<Result> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
@@ -52,8 +56,14 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
         if (await _repository.ExistsByEmailAsync(emailResult.Value, customer.Id))
             return Result.Error("The provided email address is already in use.");
 
+        var customerTypeResult = await _customerTypeRepository.GetByIdAsync(request.CustomerTypeId);
+        if (customerTypeResult == null)
+        {
+            return Result.NotFound($"The provided customer type id '{request.CustomerTypeId}' is not found.");
+        }
+
         // Changing the email in the entity.
-        customer.ChangeEmail(emailResult.Value);
+        customer.ChangeEmailAndCustomerType(emailResult.Value, customerTypeResult);
 
         // Updating the entity in the repository.
         _repository.Update(customer);

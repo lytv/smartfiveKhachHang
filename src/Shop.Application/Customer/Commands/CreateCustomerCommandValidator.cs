@@ -18,5 +18,8 @@ public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCo
             .NotEmpty()
             .MaximumLength(254)
             .EmailAddress();
+
+        RuleFor(command => command.CustomerTypeId)
+            .NotEmpty();
     }
 }

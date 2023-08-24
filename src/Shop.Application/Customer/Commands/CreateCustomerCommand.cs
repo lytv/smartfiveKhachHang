@@ -30,4 +30,11 @@ public class CreateCustomerCommand : IRequest<Result<CreatedCustomerResponse>>
     [Required]
     [DataType(DataType.Date)]
     public DateTime DateOfBirth { get; set; }
+
+    [Required]
+    [DataType(DataType.Text)]
+    public Guid CustomerTypeId { get; set; }
+
+    [Range(0, int.MaxValue)]
+    public int TenantId { get; set; } = 1;
 }

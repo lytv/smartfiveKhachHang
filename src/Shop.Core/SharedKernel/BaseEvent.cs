@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using MediatR;
 
 namespace Shop.Core.SharedKernel;
@@ -16,6 +17,7 @@ public abstract class BaseEvent : INotification
     /// <summary>
     /// Gets the aggregate ID.
     /// </summary>
+    [Key]
     public Guid AggregateId { get; protected init; }
 
     /// <summary>

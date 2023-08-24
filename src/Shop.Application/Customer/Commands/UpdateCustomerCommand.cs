@@ -14,4 +14,8 @@ public class UpdateCustomerCommand : IRequest<Result>
     [MaxLength(200)]
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; }
+
+    [Required]
+    [DataType(DataType.Text)]
+    public Guid CustomerTypeId { get; set; }
 }

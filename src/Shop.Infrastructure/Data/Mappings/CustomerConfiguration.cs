@@ -52,5 +52,10 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .Property(customer => customer.DateOfBirth)
             .IsRequired() // NOT NULL
             .HasColumnType("DATE");
+
+        builder
+            .Property(customer => customer.TenantId)
+            .IsRequired();
+
     }
 }

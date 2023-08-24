@@ -25,7 +25,8 @@ public static class ServicesCollectionExtensions
             .AddSingleton<IMapper>(new Mapper(new MapperConfiguration(cfg => cfg.AddMaps(ThisAssembly))))
             .AddValidatorsFromAssembly(ThisAssembly)
             .AddSingleton<IReadDbContext, ReadDbContext>()
-            .AddScoped<ICustomerReadOnlyRepository, CustomerReadOnlyRepository>();
+            .AddScoped<ICustomerReadOnlyRepository, CustomerReadOnlyRepository>()
+            .AddScoped<ICustomerTypeReadOnlyRepository, CustomerTypeReadOnlyRepository>();
 
         ConfigureMongoDb();
 

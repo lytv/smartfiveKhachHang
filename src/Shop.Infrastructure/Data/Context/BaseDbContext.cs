@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shop.Infrastructure.Data.Extensions;
@@ -28,4 +29,11 @@ public abstract class BaseDbContext<TContext> : DbContext
         modelBuilder
             .UseCollation(Collation)
             .RemoveCascadeDeleteConvention();
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.LogTo(Console.WriteLine);
+    }
 }

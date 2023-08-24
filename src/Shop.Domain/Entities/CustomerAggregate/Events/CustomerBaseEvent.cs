@@ -1,5 +1,6 @@
 using System;
 using Shop.Core.SharedKernel;
+using Shop.Domain.Entities.CustomerTypeAggregate;
 
 namespace Shop.Domain.Entities.CustomerAggregate.Events;
 
@@ -11,7 +12,9 @@ public abstract class CustomerBaseEvent : BaseEvent
         string lastName,
         EGender gender,
         string email,
-        DateTime dateOfBirth)
+        DateTime dateOfBirth,
+        int tenantId,
+        CustomerType customerType)
     {
         Id = id;
         AggregateId = id;
@@ -20,6 +23,8 @@ public abstract class CustomerBaseEvent : BaseEvent
         Gender = gender;
         Email = email;
         DateOfBirth = dateOfBirth;
+        TenantId = tenantId;
+        CustomerType = customerType;
     }
 
     public Guid Id { get; private init; }
@@ -28,4 +33,6 @@ public abstract class CustomerBaseEvent : BaseEvent
     public EGender Gender { get; private init; }
     public string Email { get; private init; }
     public DateTime DateOfBirth { get; private init; }
+    public int TenantId { get; private init; }
+    public CustomerType CustomerType { get; private init; }
 }

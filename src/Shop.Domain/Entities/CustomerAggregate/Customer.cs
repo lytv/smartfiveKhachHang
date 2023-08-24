@@ -1,6 +1,7 @@
 using System;
 using Shop.Core.SharedKernel;
 using Shop.Domain.Entities.CustomerAggregate.Events;
+using Shop.Domain.Entities.CustomerTypeAggregate;
 using Shop.Domain.ValueObjects;
 
 namespace Shop.Domain.Entities.CustomerAggregate;
@@ -17,16 +18,28 @@ public class Customer : BaseEntity, IAggregateRoot
     /// <param name="gender">The gender of the customer.</param>
     /// <param name="email">The email address of the customer.</param>
     /// <param name="dateOfBirth">The date of birth of the customer.</param>
-    public Customer(string firstName, string lastName, EGender gender, Email email, DateTime dateOfBirth)
+
+    public Customer(
+        string firstName,
+        string lastName,
+        EGender gender,
+        Email email,
+        DateTime dateOfBirth,
+        int tenantId,
+        CustomerType customerType)
     {
         FirstName = firstName;
         LastName = lastName;
         Gender = gender;
         Email = email;
         DateOfBirth = dateOfBirth;
+        TenantId = tenantId;
+        CustomerType = customerType;
 
-        AddDomainEvent(new CustomerCreatedEvent(Id, firstName, lastName, gender, email.Address, dateOfBirth));
+        AddDomainEvent(new CustomerCreatedEvent(Id, firstName, lastName, gender, email.Address, dateOfBirth, tenantId, customerType));
     }
+
+
 
     /// <summary>
     /// Default constructor for Entity Framework or other ORM frameworks.
@@ -61,18 +74,26 @@ public class Customer : BaseEntity, IAggregateRoot
     /// </summary>
     public DateTime DateOfBirth { get; }
 
+    public int TenantId { get; }
+
+    public virtual CustomerType CustomerType { get; set; }
+
     /// <summary>
     /// Changes the email address of the customer.
     /// </summary>
     /// <param name="newEmail">The new email address.</param>
-    public void ChangeEmail(Email newEmail)
+    public void ChangeEmailAndCustomerType(Email newEmail, CustomerType customerType)
     {
         if (Email.Equals(newEmail))
             return;
 
-        Email = newEmail;
+        if (CustomerType.Id.Equals(customerType.Id))
+            return;
 
-        AddDomainEvent(new CustomerUpdatedEvent(Id, FirstName, LastName, Gender, newEmail.Address, DateOfBirth));
+        Email = newEmail;
+        CustomerType = customerType;
+
+        AddDomainEvent(new CustomerUpdatedEvent(Id, FirstName, LastName, Gender, newEmail.Address, DateOfBirth, TenantId, customerType));
     }
 
     /// <summary>
@@ -83,6 +104,6 @@ public class Customer : BaseEntity, IAggregateRoot
         if (_isDeleted) return;
 
         _isDeleted = true;
-        AddDomainEvent(new CustomerDeletedEvent(Id, FirstName, LastName, Gender, Email.Address, DateOfBirth));
+        AddDomainEvent(new CustomerDeletedEvent(Id, FirstName, LastName, Gender, Email.Address, DateOfBirth, TenantId, CustomerType));
     }
 }

@@ -57,7 +57,7 @@ internal static class WebApplicationExtensions
     private static async Task MigrateMongoDbContextAsync(this WebApplication app, IReadDbContext readDbContext)
     {
         app.Logger.LogInformation("----- MongoDB: {Connection}", readDbContext.ConnectionString);
-        app.Logger.LogInformation("----- MongoDB: ollections are being created...");
+        app.Logger.LogInformation("----- MongoDB: Collections are being created...");
 
         await readDbContext.CreateCollectionsAsync();
 
