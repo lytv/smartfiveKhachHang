@@ -23,4 +23,9 @@ internal class CustomerWriteOnlyRepository : BaseWriteOnlyRepository<Customer>, 
         await Context.Customers
             .AsNoTracking()
             .AnyAsync(customer => customer.Email.Address == email.Address && customer.Id != currentId);
+
+    public async Task<Customer> GetIncludeByIdAsync(Guid id) =>
+        await Context.Customers
+        .Include(customer => customer.CustomerType)
+        .FirstOrDefaultAsync(customer => customer.Id == id);
 }

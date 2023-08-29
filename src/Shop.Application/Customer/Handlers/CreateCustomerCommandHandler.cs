@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,12 +55,11 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         if (await _repository.ExistsByEmailAsync(emailResult.Value))
             return Result<CreatedCustomerResponse>.Error("The provided email address is already in use.");
 
-        var customerTypeResult = await _customerTypeRepository.GetByIdAsync(request.CustomerTypeId);
+        var customerTypeResult = await _customerTypeRepository.GetByCustomerIdAsync(request.CustomerTypeId);
         if (customerTypeResult == null)
         {
             return Result<CreatedCustomerResponse>.NotFound("The provided customer type id is not found.");
         }
-
 
         // Creating an instance of the customer entity.
         // When instantiated, the "CustomerCreatedEvent" will be created.

@@ -57,5 +57,10 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .Property(customer => customer.TenantId)
             .IsRequired();
 
+        builder
+            .HasOne(customer => customer.CustomerType)
+            .WithMany()
+            .HasForeignKey(customer => customer.CustomerTypeId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

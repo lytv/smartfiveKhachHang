@@ -17,5 +17,5 @@ public class UpdateCustomerCommand : IRequest<Result>
 
     [Required]
     [DataType(DataType.Text)]
-    public Guid CustomerTypeId { get; set; }
+    public Guid? CustomerTypeId { get; set; }
 }

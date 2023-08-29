@@ -1,5 +1,6 @@
 using AutoMapper;
 using Shop.Domain.Entities.CustomerAggregate.Events;
+using Shop.Domain.Entities.CustomerTypeAggregate;
 using Shop.Domain.Entities.CustomerTypeAggregate.Events;
 using Shop.Query.QueriesModel;
 
@@ -10,9 +11,11 @@ public class EventToQueryModelProfile : Profile
     public EventToQueryModelProfile()
     {
         CreateMap<CustomerCreatedEvent, CustomerQueryModel>(MemberList.Destination)
+            .ForMember(dest => dest.CustomerType, opt => opt.MapFrom(src => src.CustomerType))
             .ConstructUsing(@event => Create(@event));
 
         CreateMap<CustomerUpdatedEvent, CustomerQueryModel>(MemberList.Destination)
+            .ForMember(dest => dest.CustomerType, opt => opt.MapFrom(src => src.CustomerType))
             .ConstructUsing(@event => Create(@event));
 
         CreateMap<CustomerDeletedEvent, CustomerQueryModel>(MemberList.Destination)
@@ -23,6 +26,9 @@ public class EventToQueryModelProfile : Profile
 
         CreateMap<CustomerTypeUpdatedEvent, CustomerTypeQueryModel>(MemberList.Destination)
             .ConstructUsing(@event => Create(@event));
+
+        CreateMap<CustomerType, CustomerTypeQueryModel>();
+
     }
 
     private static CustomerQueryModel Create(CustomerBaseEvent @event)

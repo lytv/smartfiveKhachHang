@@ -29,11 +29,4 @@ public abstract class BaseDbContext<TContext> : DbContext
         modelBuilder
             .UseCollation(Collation)
             .RemoveCascadeDeleteConvention();
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-
-        optionsBuilder.LogTo(Console.WriteLine);
-    }
 }

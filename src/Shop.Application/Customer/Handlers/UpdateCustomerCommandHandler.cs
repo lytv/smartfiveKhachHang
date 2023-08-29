@@ -43,7 +43,9 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
         }
 
         // Getting the customer from the database.
-        var customer = await _repository.GetByIdAsync(request.Id);
+        var customer = await _repository
+            .GetIncludeByIdAsync(request.Id);
+
         if (customer == null)
             return Result.NotFound($"No customer found by Id: {request.Id}");
 
@@ -56,14 +58,20 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
         if (await _repository.ExistsByEmailAsync(emailResult.Value, customer.Id))
             return Result.Error("The provided email address is already in use.");
 
-        var customerTypeResult = await _customerTypeRepository.GetByIdAsync(request.CustomerTypeId);
-        if (customerTypeResult == null)
+        if (request.CustomerTypeId.HasValue)
         {
-            return Result.NotFound($"The provided customer type id '{request.CustomerTypeId}' is not found.");
-        }
+            var customerTypeResult = await _customerTypeRepository.GetByCustomerIdAsync(request.CustomerTypeId.Value);
+            if (customerTypeResult == null)
+            {
+                return Result.NotFound($"The provided customer type id '{request.CustomerTypeId}' is not found.");
+            }
 
-        // Changing the email in the entity.
-        customer.ChangeEmailAndCustomerType(emailResult.Value, customerTypeResult);
+            // Changing the email in the entity.
+            customer.ChangeEmailAndCustomerType(emailResult.Value, customerTypeResult);
+        } else
+        {
+            customer.ChangeEmail(emailResult.Value);
+        }
 
         // Updating the entity in the repository.
         _repository.Update(customer);

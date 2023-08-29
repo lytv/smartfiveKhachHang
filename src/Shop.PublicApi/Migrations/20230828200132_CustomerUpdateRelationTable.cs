@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shop.PublicApi.Migrations
 {
     /// <inheritdoc />
-    public partial class CustomerUpdateTable : Migration
+    public partial class CustomerUpdateRelationTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,8 @@ namespace Shop.PublicApi.Migrations
                 table: "Customers",
                 column: "CustomerTypeId",
                 principalTable: "CustomerTypes",
-                principalColumn: "Id");
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />

@@ -21,4 +21,6 @@ public interface ICustomerWriteOnlyRepository : IWriteOnlyRepository<Customer>
     /// <param name="currentId">The current ID of the customer to exclude from the check.</param>
     /// <returns>True if a customer with the email and current ID exists, false otherwise.</returns>
     Task<bool> ExistsByEmailAsync(Email email, Guid currentId);
+
+    Task<Customer> GetIncludeByIdAsync(Guid id);
 }

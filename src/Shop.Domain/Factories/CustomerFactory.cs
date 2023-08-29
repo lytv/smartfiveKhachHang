@@ -28,4 +28,5 @@ public static class CustomerFactory
     public static Customer Create(string firstName, string lastName, EGender gender, Email email, DateTime dateOfBirth, CustomerType customerType,
         int tenantId)
         => new(firstName, lastName, gender, email, dateOfBirth, tenantId, customerType);
+
 }

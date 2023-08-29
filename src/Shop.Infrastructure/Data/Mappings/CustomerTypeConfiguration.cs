@@ -26,5 +26,11 @@ public class CustomerTypeConfiguration : IEntityTypeConfiguration<CustomerType>
             .Property(customer => customer.TenantId)
             .IsRequired() // NOT NULL
             .IsUnicode(false); // VARCHAR
+
+        // Configure the one-to-many relationship with Customer
+        builder.HasMany(ct => ct.Customers)
+            .WithOne(c => c.CustomerType)
+            .HasForeignKey(c => c.CustomerTypeId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Polly;
 using Shop.Core.Extensions;
 using Shop.Core.SharedKernel;
 using Shop.Infrastructure.Data.Context;
@@ -50,8 +49,6 @@ internal sealed class UnitOfWork : IUnitOfWork
             {
                 // Getting the domain events and event stores from the tracked entities in the EF Core context.
                 var (domainEvents, eventStores) = BeforeSaveChanges();
-                _writeDbContext.ChangeTracker.DetectChanges();
-                Console.WriteLine(_writeDbContext.ChangeTracker.DebugView.LongView);
 
                 var rowsAffected = await _writeDbContext.SaveChangesAsync();
 

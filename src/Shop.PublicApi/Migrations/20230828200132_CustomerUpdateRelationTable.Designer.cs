@@ -13,8 +13,8 @@ using Shop.Infrastructure.Data.Context;
 namespace Shop.PublicApi.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20230824111508_CustomerUpdateTable")]
-    partial class CustomerUpdateTable
+    [Migration("20230828200132_CustomerUpdateRelationTable")]
+    partial class CustomerUpdateRelationTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,8 +95,9 @@ namespace Shop.PublicApi.Migrations
             modelBuilder.Entity("Shop.Domain.Entities.CustomerAggregate.Customer", b =>
                 {
                     b.HasOne("Shop.Domain.Entities.CustomerTypeAggregate.CustomerType", "CustomerType")
-                        .WithMany()
-                        .HasForeignKey("CustomerTypeId");
+                        .WithMany("Customers")
+                        .HasForeignKey("CustomerTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.OwnsOne("Shop.Domain.ValueObjects.Email", "Email", b1 =>
                         {
@@ -127,6 +128,11 @@ namespace Shop.PublicApi.Migrations
                     b.Navigation("CustomerType");
 
                     b.Navigation("Email");
+                });
+
+            modelBuilder.Entity("Shop.Domain.Entities.CustomerTypeAggregate.CustomerType", b =>
+                {
+                    b.Navigation("Customers");
                 });
 #pragma warning restore 612, 618
         }

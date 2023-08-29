@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Shop.Core.SharedKernel;
 using Shop.Domain.Entities.CustomerAggregate.Events;
 using Shop.Domain.Entities.CustomerTypeAggregate;
@@ -39,8 +41,6 @@ public class Customer : BaseEntity, IAggregateRoot
         AddDomainEvent(new CustomerCreatedEvent(Id, firstName, lastName, gender, email.Address, dateOfBirth, tenantId, customerType));
     }
 
-
-
     /// <summary>
     /// Default constructor for Entity Framework or other ORM frameworks.
     /// </summary>
@@ -76,6 +76,10 @@ public class Customer : BaseEntity, IAggregateRoot
 
     public int TenantId { get; }
 
+    public Guid? CustomerTypeId { get; set; }
+
+    [ForeignKey("CustomerTypeId")]
+    [JsonIgnore]
     public virtual CustomerType CustomerType { get; set; }
 
     /// <summary>
@@ -84,16 +88,23 @@ public class Customer : BaseEntity, IAggregateRoot
     /// <param name="newEmail">The new email address.</param>
     public void ChangeEmailAndCustomerType(Email newEmail, CustomerType customerType)
     {
-        if (Email.Equals(newEmail))
-            return;
-
-        if (CustomerType.Id.Equals(customerType.Id))
+        if (Email.Equals(newEmail) && CustomerType.Id.Equals(customerType.Id))
             return;
 
         Email = newEmail;
         CustomerType = customerType;
 
         AddDomainEvent(new CustomerUpdatedEvent(Id, FirstName, LastName, Gender, newEmail.Address, DateOfBirth, TenantId, customerType));
+    }
+
+    public void ChangeEmail(Email newEmail)
+    {
+        if (Email.Equals(newEmail))
+            return;
+
+        Email = newEmail;
+
+        AddDomainEvent(new CustomerUpdatedEvent(Id, FirstName, LastName, Gender, newEmail.Address, DateOfBirth, TenantId, CustomerType));
     }
 
     /// <summary>

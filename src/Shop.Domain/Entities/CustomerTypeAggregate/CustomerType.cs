@@ -1,5 +1,6 @@
-using System;
+using System.Collections.Generic;
 using Shop.Core.SharedKernel;
+using Shop.Domain.Entities.CustomerAggregate;
 using Shop.Domain.Entities.CustomerTypeAggregate.Events;
 
 namespace Shop.Domain.Entities.CustomerTypeAggregate;
@@ -23,6 +24,7 @@ public class CustomerType : BaseEntity, IAggregateRoot
     public string CustomerTypeCode { get; set; }
     public string Description { get; set; }
     public int TenantId { get; set; } = 1;
+    public List<Customer> Customers { get; set; }
 
     public void ChangeCodeAndDescription(string customerTypeCode, string description)
     {
