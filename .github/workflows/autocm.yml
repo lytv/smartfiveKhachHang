@@ -19,6 +19,6 @@ jobs:
       - name: Add a comment to the PR
         uses: Libra-foundation/Pull-Request-Comments@V1.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.API_TOKEN }}
         with:
           filename: templates/template.md
