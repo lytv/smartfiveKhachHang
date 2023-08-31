@@ -13,7 +13,7 @@ namespace Shop.Query.Application.CustomerType.Handlers;
 public class GetAllCustomerTypeQueryHandler :
     IRequestHandler<GetAllCustomerTypeQuery, Result<IEnumerable<CustomerTypeQueryModel>>>
 {
-    private const string CacheKey = nameof(GetAllCustomerQuery);
+    private const string CacheKey = nameof(GetAllCustomerTypeQuery);
     private readonly ICacheService _cacheService;
     private readonly ICustomerTypeReadOnlyRepository _readOnlyRepository;
 

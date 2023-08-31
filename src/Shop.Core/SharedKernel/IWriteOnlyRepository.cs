@@ -1,5 +1,7 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Shop.Core.SharedKernel;
 
@@ -33,4 +35,8 @@ public interface IWriteOnlyRepository<TEntity> : IDisposable where TEntity : IEn
     /// <param name="id">The ID of the entity to retrieve.</param>
     /// <returns>The retrieved entity.</returns>
     Task<TEntity> GetByIdAsync(Guid id);
+
+    void ChangeTracking(TEntity entity, EntityState state);
+
+    void LoadReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> reference);
 }

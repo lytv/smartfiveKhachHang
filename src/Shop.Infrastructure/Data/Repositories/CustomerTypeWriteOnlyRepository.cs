@@ -21,7 +21,4 @@ internal class CustomerTypeWriteOnlyRepository : BaseWriteOnlyRepository<Custome
         await Context.CustomerTypes
         .AsNoTracking()
         .AnyAsync(customerType => customerType.CustomerTypeCode == customerTypeCode && customerType.Id == currentId);
-
-    public async Task<CustomerType> GetByCustomerIdAsync(Guid id) =>
-        await Context.CustomerTypes.FirstOrDefaultAsync(customerType => customerType.Id == id);
 }

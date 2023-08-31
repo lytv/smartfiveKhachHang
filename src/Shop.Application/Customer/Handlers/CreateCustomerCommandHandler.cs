@@ -55,7 +55,7 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         if (await _repository.ExistsByEmailAsync(emailResult.Value))
             return Result<CreatedCustomerResponse>.Error("The provided email address is already in use.");
 
-        var customerTypeResult = await _customerTypeRepository.GetByCustomerIdAsync(request.CustomerTypeId);
+        var customerTypeResult = await _customerTypeRepository.GetByIdAsync(request.CustomerTypeId);
         if (customerTypeResult == null)
         {
             return Result<CreatedCustomerResponse>.NotFound("The provided customer type id is not found.");
@@ -71,6 +71,8 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
             request.DateOfBirth,
             customerTypeResult,
             request.TenantId);
+
+        _customerTypeRepository.ChangeTracking(customerTypeResult, Microsoft.EntityFrameworkCore.EntityState.Unchanged);
 
         // Adding the entity to the repository.
         _repository.Add(customer);

@@ -60,12 +60,13 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
 
         if (request.CustomerTypeId.HasValue)
         {
-            var customerTypeResult = await _customerTypeRepository.GetByCustomerIdAsync(request.CustomerTypeId.Value);
+            var customerTypeResult = await _customerTypeRepository.GetByIdAsync(request.CustomerTypeId.Value);
             if (customerTypeResult == null)
             {
                 return Result.NotFound($"The provided customer type id '{request.CustomerTypeId}' is not found.");
             }
 
+            _customerTypeRepository.ChangeTracking(customerTypeResult, Microsoft.EntityFrameworkCore.EntityState.Unchanged);
             // Changing the email in the entity.
             customer.ChangeEmailAndCustomerType(emailResult.Value, customerTypeResult);
         } else

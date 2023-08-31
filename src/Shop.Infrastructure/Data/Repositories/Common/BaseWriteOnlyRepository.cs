@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.Linq;
@@ -31,6 +32,17 @@ internal abstract class BaseWriteOnlyRepository<TEntity> : IWriteOnlyRepository<
     public async Task<TEntity> GetByIdAsync(Guid id) =>
         await _dbSet.AsNoTrackingWithIdentityResolution().FirstOrDefaultAsync(entity => entity.Id == id);
 
+    public void ChangeTracking(TEntity entity, EntityState state)
+    {
+        Context.Entry(entity).State = state;
+    }
+
+    public void LoadReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> reference)
+        where TProperty : class
+    {
+        Context.Entry(entity).Reference(reference).Load();
+    }
+
     #region IDisposable
 
     // To detect redundant calls.
@@ -59,6 +71,5 @@ internal abstract class BaseWriteOnlyRepository<TEntity> : IWriteOnlyRepository<
 
         _disposed = true;
     }
-
     #endregion
 }

@@ -19,6 +19,4 @@ public interface ICustomerTypeWriteOnlyRepository : IWriteOnlyRepository<Custome
     /// <param name="currentId">The current ID of the customer type to exclude from the check.</param>
     /// <returns>True if a customer type with the customer type code and current ID exists, false otherwise.</returns>
     Task<bool> ExistByCodeAsync(string customerTypeCode, Guid currentId);
-
-    Task<CustomerType> GetByCustomerIdAsync(Guid id);
 }

@@ -54,7 +54,7 @@ public class CustomerTypeEventHandler :
         LogEvent(notification);
 
         await _readDbContext.DeleteAsync<CustomerTypeQueryModel>(filter => filter.Id == notification.Id);
-
+        await _readDbContext.DeleteAsync<CustomerQueryModel>(filter => filter.CustomerType.Id == notification.Id);
         await ClearCacheAsync(notification);
     }
 
