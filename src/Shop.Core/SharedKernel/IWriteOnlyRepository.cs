@@ -38,5 +38,5 @@ public interface IWriteOnlyRepository<TEntity> : IDisposable where TEntity : IEn
 
     void ChangeTracking(TEntity entity, EntityState state);
 
-    void LoadReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> reference);
+    void LoadReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> reference) where TProperty : class;
 }

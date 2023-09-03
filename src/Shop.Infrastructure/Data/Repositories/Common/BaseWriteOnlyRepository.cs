@@ -37,8 +37,9 @@ internal abstract class BaseWriteOnlyRepository<TEntity> : IWriteOnlyRepository<
         Context.Entry(entity).State = state;
     }
 
-    public void LoadReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> reference)
+    void IWriteOnlyRepository<TEntity>.LoadReference<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> reference)
         where TProperty : class
+
     {
         Context.Entry(entity).Reference(reference).Load();
     }
